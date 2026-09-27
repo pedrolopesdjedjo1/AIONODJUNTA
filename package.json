@@ -1,0 +1,19 @@
+{
+  "name": "aionodjunta",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Plataforma financeira digital AIONODJUNTA",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev:api": "npm --prefix backend run dev",
+    "start:api": "npm --prefix backend run start",
+    "dev:admin": "npm --prefix apps/admin run dev",
+    "build:admin": "npm --prefix apps/admin run build",
+    "dev:mobile": "npm --prefix apps/mobile run start",
+    "test:api": "npm --prefix backend run test",
+    "check": "node scripts/check-env.js"
+  }
+}
