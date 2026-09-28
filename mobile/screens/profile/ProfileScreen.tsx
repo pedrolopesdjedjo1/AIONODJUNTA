@@ -1,40 +1,85 @@
 import React from "react";
 import {
+  Alert,
+  ScrollView,
   StyleSheet,
-  Text,
   View,
 } from "react-native";
 
 import Button from "../../components/Button";
+import ProfileField from "../../components/ProfileField";
+import ProfileHeader from "../../components/ProfileHeader";
 import { COLORS } from "../../constants/theme";
 import { useAuth } from "../../contexts/AuthContext";
 
 export default function ProfileScreen() {
   const { user, signOut } = useAuth();
 
+  async function handleLogout() {
+    Alert.alert(
+      "Terminar sessão",
+      "Deseja realmente sair da sua conta?",
+      [
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+        {
+          text: "Sair",
+          style: "destructive",
+          onPress: signOut,
+        },
+      ]
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Meu Perfil</Text>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.content}
+    >
+      <ProfileHeader
+        name={user.name}
+        email={user.email}
+        photoUrl={user.photoUrl}
+      />
 
       <View style={styles.card}>
-        <Text style={styles.name}>
-          {user?.name || "Utilizador"}
-        </Text>
+        <ProfileField
+          label="Nome"
+          value={user.name}
+        />
 
-        {user?.email && (
-          <Text style={styles.info}>{user.email}</Text>
-        )}
+        <ProfileField
+          label="Email"
+          value={user.email}
+        />
 
-        {user?.phone && (
-          <Text style={styles.info}>{user.phone}</Text>
-        )}
+        <ProfileField
+          label="Telefone"
+          value={user.phone}
+        />
+
+        <ProfileField
+          label="Tipo de conta"
+          value={user.role}
+        />
+
+        <ProfileField
+          label="Estado da conta"
+          value={user.status}
+        />
       </View>
 
       <Button
-        title="Sair"
-        onPress={signOut}
+        title="Sair da conta"
+        onPress={handleLogout}
       />
-    </View>
+    </ScrollView>
   );
 }
 
@@ -42,35 +87,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.white,
-    padding: 24,
-    justifyContent: "center",
   },
 
-  title: {
-    fontSize: 28,
-    fontWeight: "800",
-    color: COLORS.black,
-    marginBottom: 24,
+  content: {
+    padding: 24,
+    paddingTop: 50,
   },
 
   card: {
     borderWidth: 1,
     borderColor: COLORS.border,
     borderRadius: 12,
-    padding: 20,
+    paddingHorizontal: 16,
     marginBottom: 24,
-  },
-
-  name: {
-    fontSize: 20,
-    fontWeight: "700",
-    color: COLORS.black,
-    marginBottom: 8,
-  },
-
-  info: {
-    fontSize: 16,
-    color: COLORS.gray,
-    marginBottom: 5,
   },
 });
