@@ -3,6 +3,7 @@ const express = require("express");
 const {
   listUsers,
   updateUserStatus,
+  getUserDetails,
 } = require("../controllers/adminUser.controller");
 
 const auth = require("../middleware/auth");
@@ -16,6 +17,12 @@ router.get(
   "/",
   authorize("ADMIN", "SUPER_ADMIN"),
   listUsers
+);
+
+router.get(
+  "/:id",
+  authorize("ADMIN", "SUPER_ADMIN"),
+  getUserDetails
 );
 
 router.patch(
