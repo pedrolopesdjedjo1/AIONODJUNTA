@@ -1,5 +1,9 @@
-const { defineConfig } = require("prisma/config");
+import { defineConfig, env } from "prisma/config";
 
-module.exports = defineConfig({
-  schema: "prisma/schema.prisma"
+export default defineConfig({
+  schema: "prisma/schema.prisma",
+
+  datasource: {
+    url: env("DATABASE_URL"),
+  },
 });
