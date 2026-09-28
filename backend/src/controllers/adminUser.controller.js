@@ -222,4 +222,5 @@ async function getUserDetails(req, res, next) {
 module.exports = {
   listUsers,
   updateUserStatus,
+  getUserDetails,
 };
