@@ -136,7 +136,89 @@ async function updateUserStatus(req, res, next) {
     next(error);
   }
 }
+async function getUserDetails(req, res, next) {
+  try {
+    const { id } = req.params;
 
+    const user = await prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        phone: true,
+        email: true,
+        role: true,
+        status: true,
+        kycStatus: true,
+        createdAt: true,
+
+        wallet: {
+          select: {
+            id: true,
+            balance: true,
+            currency: true,
+            updatedAt: true,
+          },
+        },
+
+        transactions: {
+          orderBy: {
+            createdAt: "desc",
+          },
+          take: 10,
+          select: {
+            id: true,
+            type: true,
+            amount: true,
+            fee: true,
+            currency: true,
+            status: true,
+            reference: true,
+            createdAt: true,
+          },
+        },
+
+        _count: {
+          select: {
+            transactions: true,
+          },
+        },
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "Utilizador não encontrado.",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        ...user,
+
+        wallet: user.wallet
+          ? {
+              ...user.wallet,
+              balance: user.wallet.balance.toString(),
+            }
+          : null,
+
+        transactions: user.transactions.map((transaction) => ({
+          ...transaction,
+          amount: transaction.amount.toString(),
+          fee: transaction.fee.toString(),
+        })),
+
+        totalTransactions: user._count.transactions,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+}
 module.exports = {
   listUsers,
   updateUserStatus,
