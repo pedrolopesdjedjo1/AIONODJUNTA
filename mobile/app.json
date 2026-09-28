@@ -1,0 +1,20 @@
+{
+  "expo": {
+    "name": "AIONÔDJUNTA",
+    "slug": "aionodjunta",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "scheme": "aionodjunta",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.aionodjunta.app"
+    },
+    "android": {
+      "package": "com.aionodjunta.app"
+    }
+  }
+}
