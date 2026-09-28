@@ -118,6 +118,55 @@ async function listTransactions(req, res, next) {
     next(error);
   }
 }
+async function getTransactionDetails(req, res, next) {
+  try {
+    const { id } = req.params;
+
+    const transaction = await prisma.transaction.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        userId: true,
+        type: true,
+        amount: true,
+        fee: true,
+        currency: true,
+        status: true,
+        reference: true,
+        description: true,
+        createdAt: true,
+        updatedAt: true,
+        user: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            phone: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    if (!transaction) {
+      return res.status(404).json({
+        success: false,
+        message: "Transação não encontrada.",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        ...transaction,
+        amount: transaction.amount.toString(),
+        fee: transaction.fee.toString(),
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+}
 
 module.exports = {
   listTransactions,
