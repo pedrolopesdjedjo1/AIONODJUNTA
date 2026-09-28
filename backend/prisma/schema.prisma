@@ -66,6 +66,7 @@ model User {
   receivedTransfers Transfer[] @relation("ReceiverTransfers")
   notifications   Notification[]
   auditLogs       AuditLog[]
+  beneficiaries Beneficiary[]
 }
 
 model Wallet {
@@ -137,4 +138,20 @@ model AuditLog {
   createdAt DateTime @default(now())
 
   user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+}
+model Beneficiary {
+  id        String   @id @default(cuid())
+  userId    String
+  name      String
+  phone     String
+  createdAt DateTime @default(now())
+
+  user User @relation(
+    fields: [userId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  @@unique([userId, phone])
+  @@index([userId])
 }
