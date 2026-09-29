@@ -1,4 +1,3 @@
-
 import { StatusBar } from "expo-status-bar";
 import {
   Alert,
@@ -32,37 +31,37 @@ const SERVICES: Service[] = [
   {
     id: "deposit",
     title: "Depositar",
-    description: "Adicionar dinheiro",
+    description: "Adicionar dinheiro à carteira",
     symbol: "+",
   },
   {
     id: "withdraw",
     title: "Levantar",
-    description: "Retirar dinheiro",
+    description: "Retirar dinheiro da carteira",
     symbol: "↓",
   },
   {
     id: "transfer",
     title: "Transferir",
-    description: "Enviar dinheiro",
+    description: "Enviar dinheiro para outra pessoa",
     symbol: "↗",
   },
   {
     id: "payment",
     title: "Pagamentos",
-    description: "Pagar serviços",
+    description: "Pagar serviços e compras",
     symbol: "✓",
   },
   {
     id: "airtime",
     title: "Recargas",
-    description: "Recarregar telefone",
+    description: "Recarregar o teu telefone",
     symbol: "⌁",
   },
   {
     id: "history",
     title: "Histórico",
-    description: "Ver movimentos",
+    description: "Consultar movimentos",
     symbol: "↺",
   },
 ];
@@ -70,17 +69,17 @@ const SERVICES: Service[] = [
 function handleServicePress(service: Service) {
   const messages: Record<string, string> = {
     deposit:
-      "O serviço de depósitos será disponibilizado quando ligarmos o backend.",
+      "O depósito será ativado depois da ligação aos serviços financeiros do AIONÔDJUNTA.",
     withdraw:
-      "O serviço de levantamentos será disponibilizado quando ligarmos o backend.",
+      "O levantamento será ativado depois da ligação aos serviços financeiros do AIONÔDJUNTA.",
     transfer:
-      "As transferências serão configuradas numa próxima etapa.",
+      "As transferências serão configuradas na próxima etapa.",
     payment:
-      "Os pagamentos serão configurados numa próxima etapa.",
+      "Os pagamentos serão configurados na próxima etapa.",
     airtime:
-      "As recargas serão configuradas numa próxima etapa.",
+      "As recargas serão configuradas na próxima etapa.",
     history:
-      "O histórico ficará disponível após a integração com o backend.",
+      "O histórico ficará disponível quando a aplicação estiver ligada ao backend.",
   };
 
   Alert.alert(
@@ -123,9 +122,11 @@ export default function ExploreScreen() {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
+        {/* CABEÇALHO */}
         <View style={styles.header}>
           <View>
             <Text style={styles.eyebrow}>AIONÔDJUNTA</Text>
+
             <Text style={styles.title}>Serviços</Text>
           </View>
 
@@ -135,9 +136,11 @@ export default function ExploreScreen() {
         </View>
 
         <Text style={styles.subtitle}>
-          Tudo o que precisas para gerir o teu dinheiro num só lugar.
+          Gere o teu dinheiro, faz pagamentos e envia
+          valores através dos serviços AIONÔDJUNTA.
         </Text>
 
+        {/* DESTAQUE */}
         <View style={styles.banner}>
           <View style={styles.bannerIcon}>
             <Text style={styles.bannerIconText}>XOF</Text>
@@ -145,25 +148,37 @@ export default function ExploreScreen() {
 
           <View style={styles.bannerContent}>
             <Text style={styles.bannerTitle}>
-              Os teus serviços financeiros
+              Serviços financeiros
             </Text>
+
             <Text style={styles.bannerDescription}>
-              Descobre as funcionalidades da tua conta AIONÔDJUNTA.
+              Tudo o que precisas para gerir a tua carteira
+              AIONÔDJUNTA num só lugar.
             </Text>
           </View>
         </View>
 
+        {/* SERVIÇOS */}
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Operações financeiras</Text>
-          <Text style={styles.sectionCaption}>6 serviços</Text>
+          <Text style={styles.sectionTitle}>
+            Operações financeiras
+          </Text>
+
+          <Text style={styles.sectionCaption}>
+            {SERVICES.length} serviços
+          </Text>
         </View>
 
         <View style={styles.servicesGrid}>
           {SERVICES.map((service) => (
-            <ServiceCard key={service.id} service={service} />
+            <ServiceCard
+              key={service.id}
+              service={service}
+            />
           ))}
         </View>
 
+        {/* INFORMAÇÃO */}
         <View style={styles.notice}>
           <View style={styles.noticeIcon}>
             <Text style={styles.noticeIconText}>i</Text>
@@ -173,10 +188,12 @@ export default function ExploreScreen() {
             <Text style={styles.noticeTitle}>
               Informação importante
             </Text>
+
             <Text style={styles.noticeDescription}>
-              Os serviços financeiros serão ativados após a integração
-              com o backend. Nenhuma operação financeira é realizada
-              neste ecrã.
+              Esta área apresenta os serviços disponíveis
+              no AIONÔDJUNTA. As operações reais serão
+              ativadas após a integração completa com o
+              backend e os serviços financeiros.
             </Text>
           </View>
         </View>
