@@ -1,4 +1,3 @@
-
 import { StatusBar } from "expo-status-bar";
 import {
   Alert,
@@ -31,15 +30,15 @@ export default function WelcomeScreen() {
 
   function handleEnter() {
     Alert.alert(
-      "AIONÔDJUNTA",
-      "O ecrã de entrada será disponibilizado na próxima etapa."
+      "Entrar",
+      "O acesso à tua conta AIONÔDJUNTA será configurado na próxima etapa."
     );
   }
 
   function handleCreateAccount() {
     Alert.alert(
-      "AIONÔDJUNTA",
-      "O formulário de criação de conta será disponibilizado na próxima etapa."
+      "Criar conta",
+      "O cadastro da tua conta AIONÔDJUNTA será configurado na próxima etapa."
     );
   }
 
@@ -60,6 +59,7 @@ export default function WelcomeScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.container}>
+          {/* MARCA */}
           <View style={styles.topBar}>
             <View style={styles.brandMark}>
               <Text style={styles.brandMarkText}>A</Text>
@@ -67,16 +67,20 @@ export default function WelcomeScreen() {
 
             <View style={styles.brandTextContainer}>
               <Text style={styles.brandName}>AIONÔDJUNTA</Text>
+
               <Text style={styles.brandSubtitle}>
                 SERVIÇOS FINANCEIROS
               </Text>
             </View>
           </View>
 
+          {/* ÁREA PRINCIPAL */}
           <View
             style={[
               styles.hero,
-              { paddingVertical: compact ? 12 : 22 },
+              {
+                paddingVertical: compact ? 12 : 22,
+              },
             ]}
           >
             <View
@@ -119,6 +123,7 @@ export default function WelcomeScreen() {
                 </View>
               </View>
 
+              {/* ÍCONE SUPERIOR */}
               <View
                 style={[
                   styles.smallCircleTop,
@@ -132,6 +137,7 @@ export default function WelcomeScreen() {
                 <Text style={styles.smallCircleText}>+</Text>
               </View>
 
+              {/* ÍCONE INFERIOR */}
               <View
                 style={[
                   styles.smallCircleBottom,
@@ -149,7 +155,13 @@ export default function WelcomeScreen() {
             <Text
               style={[
                 styles.title,
-                { fontSize: smallScreen ? 29 : compact ? 31 : 34 },
+                {
+                  fontSize: smallScreen
+                    ? 29
+                    : compact
+                      ? 31
+                      : 34,
+                },
               ]}
             >
               O teu dinheiro,{"\n"}
@@ -162,32 +174,43 @@ export default function WelcomeScreen() {
               com praticidade e segurança.
             </Text>
 
+            {/* SERVIÇOS */}
             <View style={styles.featureRow}>
               <View style={styles.featureItem}>
                 <Text style={styles.featureIcon}>↗</Text>
-                <Text style={styles.featureText}>Transferências</Text>
+
+                <Text style={styles.featureText}>
+                  Transferências
+                </Text>
               </View>
 
               <View style={styles.featureDivider} />
 
               <View style={styles.featureItem}>
                 <Text style={styles.featureIcon}>✓</Text>
-                <Text style={styles.featureText}>Pagamentos</Text>
+
+                <Text style={styles.featureText}>
+                  Pagamentos
+                </Text>
               </View>
             </View>
           </View>
 
+          {/* BOTÕES */}
           <View style={styles.actions}>
             <Pressable
               accessibilityRole="button"
-              accessibilityLabel="Entrar na tua conta"
+              accessibilityLabel="Entrar na tua conta AIONÔDJUNTA"
               onPress={handleEnter}
               style={({ pressed }) => [
                 styles.primaryButton,
                 pressed && styles.buttonPressed,
               ]}
             >
-              <Text style={styles.primaryButtonText}>Entrar</Text>
+              <Text style={styles.primaryButtonText}>
+                Entrar
+              </Text>
+
               <Text style={styles.buttonArrow}>→</Text>
             </Pressable>
 
