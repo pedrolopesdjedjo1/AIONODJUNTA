@@ -1,180 +1,410 @@
-import { Image } from 'expo-image';
-import { SymbolView } from 'expo-symbols';
-import { Platform, Pressable, ScrollView, StyleSheet } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { ExternalLink } from '@/components/external-link';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Collapsible } from '@/components/ui/collapsible';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
-import { useTheme } from '@/hooks/use-theme';
+import { StatusBar } from "expo-status-bar";
+import {
+  Alert,
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
-export default function TabTwoScreen() {
-  const safeAreaInsets = useSafeAreaInsets();
-  const insets = {
-    ...safeAreaInsets,
-    bottom: safeAreaInsets.bottom + BottomTabInset + Spacing.three,
+const COLORS = {
+  background: "#F5F8F6",
+  primary: "#087A55",
+  primaryDark: "#075B40",
+  text: "#14251F",
+  secondary: "#6B7C74",
+  white: "#FFFFFF",
+  border: "#E2EAE5",
+  accent: "#D9F2E5",
+};
+
+type Service = {
+  id: string;
+  title: string;
+  description: string;
+  symbol: string;
+};
+
+const SERVICES: Service[] = [
+  {
+    id: "deposit",
+    title: "Depositar",
+    description: "Adicionar dinheiro",
+    symbol: "+",
+  },
+  {
+    id: "withdraw",
+    title: "Levantar",
+    description: "Retirar dinheiro",
+    symbol: "↓",
+  },
+  {
+    id: "transfer",
+    title: "Transferir",
+    description: "Enviar dinheiro",
+    symbol: "↗",
+  },
+  {
+    id: "payment",
+    title: "Pagamentos",
+    description: "Pagar serviços",
+    symbol: "✓",
+  },
+  {
+    id: "airtime",
+    title: "Recargas",
+    description: "Recarregar telefone",
+    symbol: "⌁",
+  },
+  {
+    id: "history",
+    title: "Histórico",
+    description: "Ver movimentos",
+    symbol: "↺",
+  },
+];
+
+function handleServicePress(service: Service) {
+  const messages: Record<string, string> = {
+    deposit:
+      "O serviço de depósitos será disponibilizado quando ligarmos o backend.",
+    withdraw:
+      "O serviço de levantamentos será disponibilizado quando ligarmos o backend.",
+    transfer:
+      "As transferências serão configuradas numa próxima etapa.",
+    payment:
+      "Os pagamentos serão configurados numa próxima etapa.",
+    airtime:
+      "As recargas serão configuradas numa próxima etapa.",
+    history:
+      "O histórico ficará disponível após a integração com o backend.",
   };
-  const theme = useTheme();
 
-  const contentPlatformStyle = Platform.select({
-    android: {
-      paddingTop: insets.top,
-      paddingLeft: insets.left,
-      paddingRight: insets.right,
-      paddingBottom: insets.bottom,
-    },
-    web: {
-      paddingTop: Spacing.six,
-      paddingBottom: Spacing.four,
-    },
-  });
+  Alert.alert(
+    service.title,
+    messages[service.id] ?? "Este serviço estará disponível em breve."
+  );
+}
 
+function ServiceCard({ service }: { service: Service }) {
   return (
-    <ScrollView
-      style={[styles.scrollView, { backgroundColor: theme.background }]}
-      contentInset={insets}
-      contentContainerStyle={[styles.contentContainer, contentPlatformStyle]}>
-      <ThemedView style={styles.container}>
-        <ThemedView style={styles.titleContainer}>
-          <ThemedText type="subtitle">Explore</ThemedText>
-          <ThemedText style={styles.centerText} themeColor="textSecondary">
-            This starter app includes example{'\n'}code to help you get started.
-          </ThemedText>
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={`${service.title}. ${service.description}`}
+      onPress={() => handleServicePress(service)}
+      style={({ pressed }) => [
+        styles.serviceCard,
+        pressed && styles.pressed,
+      ]}
+    >
+      <View style={styles.serviceIcon}>
+        <Text style={styles.serviceSymbol}>{service.symbol}</Text>
+      </View>
 
-          <ExternalLink href="https://docs.expo.dev" asChild>
-            <Pressable style={({ pressed }) => pressed && styles.pressed}>
-              <ThemedView type="backgroundElement" style={styles.linkButton}>
-                <ThemedText type="link">Expo documentation</ThemedText>
-                <SymbolView
-                  tintColor={theme.text}
-                  name={{ ios: 'arrow.up.right.square', android: 'link', web: 'link' }}
-                  size={12}
-                />
-              </ThemedView>
-            </Pressable>
-          </ExternalLink>
-        </ThemedView>
+      <Text style={styles.serviceTitle}>{service.title}</Text>
 
-        <ThemedView style={styles.sectionsWrapper}>
-          <Collapsible title="File-based routing">
-            <ThemedText type="small">
-              This app has two screens: <ThemedText type="code">src/app/index.tsx</ThemedText> and{' '}
-              <ThemedText type="code">src/app/explore.tsx</ThemedText>
-            </ThemedText>
-            <ThemedText type="small">
-              The layout file in <ThemedText type="code">src/app/_layout.tsx</ThemedText> sets up
-              the tab navigator.
-            </ThemedText>
-            <ExternalLink href="https://docs.expo.dev/router/introduction">
-              <ThemedText type="linkPrimary">Learn more</ThemedText>
-            </ExternalLink>
-          </Collapsible>
+      <Text style={styles.serviceDescription}>
+        {service.description}
+      </Text>
+    </Pressable>
+  );
+}
 
-          <Collapsible title="Android, iOS, and web support">
-            <ThemedView type="backgroundElement" style={styles.collapsibleContent}>
-              <ThemedText type="small">
-                You can open this project on Android, iOS, and the web. To open the web version,
-                press <ThemedText type="smallBold">w</ThemedText> in the terminal running this
-                project.
-              </ThemedText>
-              <Image
-                source={require('@/assets/images/tutorial-web.png')}
-                style={styles.imageTutorial}
-              />
-            </ThemedView>
-          </Collapsible>
+export default function ExploreScreen() {
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      <StatusBar style="dark" />
 
-          <Collapsible title="Images">
-            <ThemedText type="small">
-              For static images, you can use the <ThemedText type="code">@2x</ThemedText> and{' '}
-              <ThemedText type="code">@3x</ThemedText> suffixes to provide files for different
-              screen densities.
-            </ThemedText>
-            <Image source={require('@/assets/images/react-logo.png')} style={styles.imageReact} />
-            <ExternalLink href="https://reactnative.dev/docs/images">
-              <ThemedText type="linkPrimary">Learn more</ThemedText>
-            </ExternalLink>
-          </Collapsible>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.header}>
+          <View>
+            <Text style={styles.eyebrow}>AIONÔDJUNTA</Text>
+            <Text style={styles.title}>Serviços</Text>
+          </View>
 
-          <Collapsible title="Light and dark mode components">
-            <ThemedText type="small">
-              This template has light and dark mode support. The{' '}
-              <ThemedText type="code">useColorScheme()</ThemedText> hook lets you inspect what the
-              user&apos;s current color scheme is, and so you can adjust UI colors accordingly.
-            </ThemedText>
-            <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-              <ThemedText type="linkPrimary">Learn more</ThemedText>
-            </ExternalLink>
-          </Collapsible>
+          <View style={styles.headerMark}>
+            <Text style={styles.headerMarkText}>A</Text>
+          </View>
+        </View>
 
-          <Collapsible title="Animations">
-            <ThemedText type="small">
-              This template includes an example of an animated component. The{' '}
-              <ThemedText type="code">src/components/ui/collapsible.tsx</ThemedText> component uses
-              the powerful <ThemedText type="code">react-native-reanimated</ThemedText> library to
-              animate opening this hint.
-            </ThemedText>
-          </Collapsible>
-        </ThemedView>
-        {Platform.OS === 'web' && <WebBadge />}
-      </ThemedView>
-    </ScrollView>
+        <Text style={styles.subtitle}>
+          Tudo o que precisas para gerir o teu dinheiro num só lugar.
+        </Text>
+
+        <View style={styles.banner}>
+          <View style={styles.bannerIcon}>
+            <Text style={styles.bannerIconText}>XOF</Text>
+          </View>
+
+          <View style={styles.bannerContent}>
+            <Text style={styles.bannerTitle}>
+              Os teus serviços financeiros
+            </Text>
+            <Text style={styles.bannerDescription}>
+              Descobre as funcionalidades da tua conta AIONÔDJUNTA.
+            </Text>
+          </View>
+        </View>
+
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>Operações financeiras</Text>
+          <Text style={styles.sectionCaption}>6 serviços</Text>
+        </View>
+
+        <View style={styles.servicesGrid}>
+          {SERVICES.map((service) => (
+            <ServiceCard key={service.id} service={service} />
+          ))}
+        </View>
+
+        <View style={styles.notice}>
+          <View style={styles.noticeIcon}>
+            <Text style={styles.noticeIconText}>i</Text>
+          </View>
+
+          <View style={styles.noticeContent}>
+            <Text style={styles.noticeTitle}>
+              Informação importante
+            </Text>
+            <Text style={styles.noticeDescription}>
+              Os serviços financeiros serão ativados após a integração
+              com o backend. Nenhuma operação financeira é realizada
+              neste ecrã.
+            </Text>
+          </View>
+        </View>
+
+        <Text style={styles.footer}>
+          AIONÔDJUNTA · Serviços financeiros
+        </Text>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: COLORS.background,
+  },
+
   scrollView: {
     flex: 1,
   },
-  contentContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+
+  content: {
+    paddingHorizontal: 22,
+    paddingTop: 18,
+    paddingBottom: 32,
   },
-  container: {
-    maxWidth: MaxContentWidth,
-    flexGrow: 1,
+
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
-  titleContainer: {
-    gap: Spacing.three,
-    alignItems: 'center',
-    paddingHorizontal: Spacing.four,
-    paddingVertical: Spacing.six,
+
+  eyebrow: {
+    color: COLORS.primary,
+    fontSize: 11,
+    fontWeight: "800",
+    letterSpacing: 1.5,
+    marginBottom: 5,
   },
-  centerText: {
-    textAlign: 'center',
+
+  title: {
+    color: COLORS.text,
+    fontSize: 30,
+    fontWeight: "800",
+    letterSpacing: -0.7,
   },
+
+  headerMark: {
+    width: 46,
+    height: 46,
+    borderRadius: 15,
+    backgroundColor: COLORS.primary,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  headerMarkText: {
+    color: COLORS.white,
+    fontSize: 27,
+    fontWeight: "800",
+  },
+
+  subtitle: {
+    color: COLORS.secondary,
+    fontSize: 14,
+    lineHeight: 22,
+    marginTop: 12,
+    marginBottom: 24,
+  },
+
+  banner: {
+    backgroundColor: COLORS.primary,
+    borderRadius: 20,
+    padding: 18,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 14,
+    marginBottom: 28,
+  },
+
+  bannerIcon: {
+    width: 58,
+    height: 58,
+    borderRadius: 18,
+    backgroundColor: "rgba(255,255,255,0.16)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  bannerIconText: {
+    color: COLORS.white,
+    fontSize: 17,
+    fontWeight: "800",
+  },
+
+  bannerContent: {
+    flex: 1,
+    gap: 5,
+  },
+
+  bannerTitle: {
+    color: COLORS.white,
+    fontSize: 15,
+    fontWeight: "800",
+  },
+
+  bannerDescription: {
+    color: "#E0F3E9",
+    fontSize: 12,
+    lineHeight: 18,
+  },
+
+  sectionHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 15,
+  },
+
+  sectionTitle: {
+    color: COLORS.text,
+    fontSize: 17,
+    fontWeight: "800",
+  },
+
+  sectionCaption: {
+    color: COLORS.secondary,
+    fontSize: 12,
+  },
+
+  servicesGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    rowGap: 13,
+  },
+
+  serviceCard: {
+    width: "48%",
+    minHeight: 148,
+    padding: 15,
+    borderRadius: 18,
+    backgroundColor: COLORS.white,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+  },
+
+  serviceIcon: {
+    width: 43,
+    height: 43,
+    borderRadius: 14,
+    backgroundColor: COLORS.accent,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 13,
+  },
+
+  serviceSymbol: {
+    color: COLORS.primary,
+    fontSize: 25,
+    fontWeight: "700",
+  },
+
+  serviceTitle: {
+    color: COLORS.text,
+    fontSize: 15,
+    fontWeight: "800",
+    marginBottom: 5,
+  },
+
+  serviceDescription: {
+    color: COLORS.secondary,
+    fontSize: 11,
+    lineHeight: 16,
+  },
+
   pressed: {
     opacity: 0.7,
   },
-  linkButton: {
-    flexDirection: 'row',
-    paddingHorizontal: Spacing.four,
-    paddingVertical: Spacing.two,
-    borderRadius: Spacing.five,
-    justifyContent: 'center',
-    gap: Spacing.one,
-    alignItems: 'center',
+
+  notice: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 12,
+    backgroundColor: COLORS.accent,
+    borderRadius: 16,
+    padding: 15,
+    marginTop: 25,
   },
-  sectionsWrapper: {
-    gap: Spacing.five,
-    paddingHorizontal: Spacing.four,
-    paddingTop: Spacing.three,
+
+  noticeIcon: {
+    width: 25,
+    height: 25,
+    borderRadius: 13,
+    backgroundColor: COLORS.primary,
+    alignItems: "center",
+    justifyContent: "center",
   },
-  collapsibleContent: {
-    alignItems: 'center',
+
+  noticeIconText: {
+    color: COLORS.white,
+    fontSize: 15,
+    fontWeight: "800",
   },
-  imageTutorial: {
-    width: '100%',
-    aspectRatio: 296 / 171,
-    borderRadius: Spacing.three,
-    marginTop: Spacing.two,
+
+  noticeContent: {
+    flex: 1,
+    gap: 5,
   },
-  imageReact: {
-    width: 100,
-    height: 100,
-    alignSelf: 'center',
+
+  noticeTitle: {
+    color: COLORS.primaryDark,
+    fontSize: 13,
+    fontWeight: "800",
+  },
+
+  noticeDescription: {
+    color: COLORS.primaryDark,
+    fontSize: 12,
+    lineHeight: 19,
+  },
+
+  footer: {
+    color: COLORS.secondary,
+    fontSize: 11,
+    textAlign: "center",
+    marginTop: 25,
   },
 });
