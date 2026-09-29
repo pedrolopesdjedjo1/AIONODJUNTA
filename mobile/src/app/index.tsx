@@ -4,9 +4,11 @@ import {
   Alert,
   Pressable,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   View,
+  useWindowDimensions,
 } from "react-native";
 
 const COLORS = {
@@ -18,20 +20,26 @@ const COLORS = {
   white: "#FFFFFF",
   border: "#E2EAE5",
   accent: "#D9F2E5",
+  accentDark: "#8DE0B5",
 };
 
 export default function WelcomeScreen() {
+  const { height, width } = useWindowDimensions();
+
+  const compact = height < 740;
+  const smallScreen = width < 360;
+
   function handleEnter() {
     Alert.alert(
       "AIONÔDJUNTA",
-      "O módulo de autenticação será configurado no próximo passo."
+      "O ecrã de entrada será disponibilizado na próxima etapa."
     );
   }
 
   function handleCreateAccount() {
     Alert.alert(
       "AIONÔDJUNTA",
-      "O registo de utilizadores será configurado no próximo passo."
+      "O formulário de criação de conta será disponibilizado na próxima etapa."
     );
   }
 
@@ -39,84 +47,174 @@ export default function WelcomeScreen() {
     <SafeAreaView style={styles.safeArea}>
       <StatusBar style="dark" />
 
-      <View style={styles.container}>
-        <View style={styles.topBar}>
-          <View style={styles.brandMark}>
-            <Text style={styles.brandMarkText}>A</Text>
+      <ScrollView
+        contentContainerStyle={[
+          styles.scrollContent,
+          {
+            minHeight: height,
+            paddingHorizontal: smallScreen ? 20 : 26,
+            paddingTop: compact ? 12 : 20,
+            paddingBottom: compact ? 16 : 24,
+          },
+        ]}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.container}>
+          <View style={styles.topBar}>
+            <View style={styles.brandMark}>
+              <Text style={styles.brandMarkText}>A</Text>
+            </View>
+
+            <View style={styles.brandTextContainer}>
+              <Text style={styles.brandName}>AIONÔDJUNTA</Text>
+              <Text style={styles.brandSubtitle}>
+                SERVIÇOS FINANCEIROS
+              </Text>
+            </View>
           </View>
 
-          <Text style={styles.brandName}>AIONÔDJUNTA</Text>
-        </View>
+          <View
+            style={[
+              styles.hero,
+              { paddingVertical: compact ? 12 : 22 },
+            ]}
+          >
+            <View
+              style={[
+                styles.illustration,
+                {
+                  width: compact ? 190 : 230,
+                  height: compact ? 185 : 220,
+                  marginBottom: compact ? 18 : 28,
+                },
+              ]}
+            >
+              <View
+                style={[
+                  styles.outerCircle,
+                  {
+                    width: compact ? 164 : 196,
+                    height: compact ? 164 : 196,
+                    borderRadius: compact ? 82 : 98,
+                  },
+                ]}
+              >
+                <View
+                  style={[
+                    styles.innerCircle,
+                    {
+                      width: compact ? 124 : 148,
+                      height: compact ? 124 : 148,
+                      borderRadius: compact ? 62 : 74,
+                    },
+                  ]}
+                >
+                  <Text style={styles.currencySymbol}>XOF</Text>
 
-        <View style={styles.hero}>
-          <View style={styles.illustration}>
-            <View style={styles.outerCircle}>
-              <View style={styles.innerCircle}>
-                <Text style={styles.currencySymbol}>XOF</Text>
+                  <View style={styles.currencyLine} />
 
-                <View style={styles.currencyLine} />
+                  <Text style={styles.currencyText}>
+                    A tua vida financeira
+                  </Text>
+                </View>
+              </View>
 
-                <Text style={styles.currencyText}>
-                  A tua vida financeira
-                </Text>
+              <View
+                style={[
+                  styles.smallCircleTop,
+                  {
+                    width: compact ? 40 : 48,
+                    height: compact ? 40 : 48,
+                    borderRadius: compact ? 20 : 24,
+                  },
+                ]}
+              >
+                <Text style={styles.smallCircleText}>+</Text>
+              </View>
+
+              <View
+                style={[
+                  styles.smallCircleBottom,
+                  {
+                    width: compact ? 40 : 46,
+                    height: compact ? 40 : 46,
+                    borderRadius: compact ? 20 : 23,
+                  },
+                ]}
+              >
+                <Text style={styles.checkMark}>✓</Text>
               </View>
             </View>
 
-            <View style={styles.smallCircleTop}>
-              <Text style={styles.smallCircleText}>+</Text>
-            </View>
+            <Text
+              style={[
+                styles.title,
+                { fontSize: smallScreen ? 29 : compact ? 31 : 34 },
+              ]}
+            >
+              O teu dinheiro,{"\n"}
+              <Text style={styles.titleAccent}>mais perto.</Text>
+            </Text>
 
-            <View style={styles.smallCircleBottom}>
-              <Text style={styles.smallCircleText}>✓</Text>
+            <Text style={styles.description}>
+              Uma nova forma de gerir o teu dinheiro,
+              fazer pagamentos e enviar valores
+              com praticidade e segurança.
+            </Text>
+
+            <View style={styles.featureRow}>
+              <View style={styles.featureItem}>
+                <Text style={styles.featureIcon}>↗</Text>
+                <Text style={styles.featureText}>Transferências</Text>
+              </View>
+
+              <View style={styles.featureDivider} />
+
+              <View style={styles.featureItem}>
+                <Text style={styles.featureIcon}>✓</Text>
+                <Text style={styles.featureText}>Pagamentos</Text>
+              </View>
             </View>
           </View>
 
-          <Text style={styles.title}>
-            O teu dinheiro,{"\n"}
-            <Text style={styles.titleAccent}>
-              mais perto.
-            </Text>
-          </Text>
+          <View style={styles.actions}>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Entrar na tua conta"
+              onPress={handleEnter}
+              style={({ pressed }) => [
+                styles.primaryButton,
+                pressed && styles.buttonPressed,
+              ]}
+            >
+              <Text style={styles.primaryButtonText}>Entrar</Text>
+              <Text style={styles.buttonArrow}>→</Text>
+            </Pressable>
 
-          <Text style={styles.description}>
-            Uma nova forma de gerir o teu dinheiro,
-            fazer pagamentos e enviar valores
-            com praticidade.
-          </Text>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Criar uma conta AIONÔDJUNTA"
+              onPress={handleCreateAccount}
+              style={({ pressed }) => [
+                styles.secondaryButton,
+                pressed && styles.buttonPressed,
+              ]}
+            >
+              <Text style={styles.secondaryButtonText}>
+                Criar conta
+              </Text>
+            </Pressable>
+
+            <Text style={styles.footer}>
+              AIONÔDJUNTA · Serviços financeiros
+            </Text>
+
+            <Text style={styles.footerNote}>
+              A tua vida financeira, mais simples.
+            </Text>
+          </View>
         </View>
-
-        <View style={styles.actions}>
-          <Pressable
-            accessibilityRole="button"
-            onPress={handleEnter}
-            style={({ pressed }) => [
-              styles.primaryButton,
-              pressed && styles.buttonPressed,
-            ]}
-          >
-            <Text style={styles.primaryButtonText}>
-              Entrar
-            </Text>
-          </Pressable>
-
-          <Pressable
-            accessibilityRole="button"
-            onPress={handleCreateAccount}
-            style={({ pressed }) => [
-              styles.secondaryButton,
-              pressed && styles.buttonPressed,
-            ]}
-          >
-            <Text style={styles.secondaryButtonText}>
-              Criar conta
-            </Text>
-          </Pressable>
-
-          <Text style={styles.footer}>
-            AIONÔDJUNTA · Serviços financeiros
-          </Text>
-        </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -127,11 +225,12 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.background,
   },
 
+  scrollContent: {
+    flexGrow: 1,
+  },
+
   container: {
     flex: 1,
-    paddingHorizontal: 26,
-    paddingTop: 18,
-    paddingBottom: 20,
     justifyContent: "space-between",
   },
 
@@ -142,9 +241,9 @@ const styles = StyleSheet.create({
   },
 
   brandMark: {
-    width: 42,
-    height: 42,
-    borderRadius: 14,
+    width: 44,
+    height: 44,
+    borderRadius: 15,
     backgroundColor: COLORS.primary,
     alignItems: "center",
     justifyContent: "center",
@@ -152,52 +251,53 @@ const styles = StyleSheet.create({
 
   brandMarkText: {
     color: COLORS.white,
-    fontSize: 25,
+    fontSize: 27,
     fontWeight: "800",
+  },
+
+  brandTextContainer: {
+    gap: 3,
   },
 
   brandName: {
     color: COLORS.text,
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: "800",
-    letterSpacing: 1,
+    letterSpacing: 0.7,
+  },
+
+  brandSubtitle: {
+    color: COLORS.secondary,
+    fontSize: 9,
+    fontWeight: "700",
+    letterSpacing: 1.5,
   },
 
   hero: {
     alignItems: "center",
-    paddingVertical: 20,
   },
 
   illustration: {
-    width: 230,
-    height: 220,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 28,
   },
 
   outerCircle: {
-    width: 196,
-    height: 196,
-    borderRadius: 98,
     backgroundColor: COLORS.accent,
     alignItems: "center",
     justifyContent: "center",
   },
 
   innerCircle: {
-    width: 148,
-    height: 148,
-    borderRadius: 74,
     backgroundColor: COLORS.primary,
     alignItems: "center",
     justifyContent: "center",
-    padding: 12,
+    padding: 10,
   },
 
   currencySymbol: {
     color: COLORS.white,
-    fontSize: 30,
+    fontSize: 29,
     fontWeight: "800",
     letterSpacing: 1,
   },
@@ -206,7 +306,7 @@ const styles = StyleSheet.create({
     width: 42,
     height: 3,
     borderRadius: 2,
-    backgroundColor: "#8DE0B5",
+    backgroundColor: COLORS.accentDark,
     marginVertical: 9,
   },
 
@@ -218,11 +318,8 @@ const styles = StyleSheet.create({
 
   smallCircleTop: {
     position: "absolute",
-    top: 14,
-    right: 14,
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    top: 8,
+    right: 5,
     backgroundColor: COLORS.white,
     borderWidth: 1,
     borderColor: COLORS.border,
@@ -232,11 +329,8 @@ const styles = StyleSheet.create({
 
   smallCircleBottom: {
     position: "absolute",
-    bottom: 10,
-    left: 12,
-    width: 46,
-    height: 46,
-    borderRadius: 23,
+    bottom: 5,
+    left: 5,
     backgroundColor: COLORS.white,
     borderWidth: 1,
     borderColor: COLORS.border,
@@ -246,17 +340,22 @@ const styles = StyleSheet.create({
 
   smallCircleText: {
     color: COLORS.primary,
-    fontSize: 24,
+    fontSize: 25,
     fontWeight: "700",
+  },
+
+  checkMark: {
+    color: COLORS.primary,
+    fontSize: 23,
+    fontWeight: "800",
   },
 
   title: {
     color: COLORS.text,
-    fontSize: 32,
     fontWeight: "800",
     textAlign: "center",
-    lineHeight: 40,
-    letterSpacing: -0.7,
+    lineHeight: 41,
+    letterSpacing: -0.8,
   },
 
   titleAccent: {
@@ -266,10 +365,42 @@ const styles = StyleSheet.create({
   description: {
     maxWidth: 310,
     color: COLORS.secondary,
-    fontSize: 15,
-    lineHeight: 24,
+    fontSize: 14,
+    lineHeight: 23,
     textAlign: "center",
-    marginTop: 16,
+    marginTop: 14,
+  },
+
+  featureRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 22,
+    gap: 18,
+  },
+
+  featureItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 7,
+  },
+
+  featureIcon: {
+    color: COLORS.primary,
+    fontSize: 17,
+    fontWeight: "800",
+  },
+
+  featureText: {
+    color: COLORS.primaryDark,
+    fontSize: 12,
+    fontWeight: "600",
+  },
+
+  featureDivider: {
+    width: 1,
+    height: 20,
+    backgroundColor: COLORS.border,
   },
 
   actions: {
@@ -281,14 +412,25 @@ const styles = StyleSheet.create({
     minHeight: 56,
     borderRadius: 16,
     backgroundColor: COLORS.primary,
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
+    position: "relative",
+    paddingHorizontal: 20,
   },
 
   primaryButtonText: {
     color: COLORS.white,
     fontSize: 16,
     fontWeight: "700",
+  },
+
+  buttonArrow: {
+    position: "absolute",
+    right: 20,
+    color: COLORS.white,
+    fontSize: 22,
+    fontWeight: "500",
   },
 
   secondaryButton: {
@@ -315,6 +457,13 @@ const styles = StyleSheet.create({
     color: COLORS.secondary,
     fontSize: 11,
     textAlign: "center",
-    marginTop: 12,
+    marginTop: 8,
+  },
+
+  footerNote: {
+    color: COLORS.secondary,
+    fontSize: 10,
+    textAlign: "center",
+    marginTop: -6,
   },
 });
