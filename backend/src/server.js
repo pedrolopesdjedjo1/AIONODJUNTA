@@ -5,6 +5,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 
 const healthRoutes = require("./routes/health.routes");
+const authRoutes = require("./routes/auth.routes");
 
 const app = express();
 
@@ -25,7 +26,9 @@ app.use(
         return callback(null, true);
       }
 
-      return callback(new Error("Origem não autorizada pelo CORS"));
+      return callback(
+        new Error("Origem não autorizada pelo CORS")
+      );
     },
   })
 );
@@ -41,8 +44,11 @@ app.get("/", (req, res) => {
   });
 });
 
-// Ligar as rotas de saúde.
+// Rotas de saúde.
 app.use("/health", healthRoutes);
+
+// Rotas de autenticação.
+app.use("/api/auth", authRoutes);
 
 // Rota para endereços inexistentes.
 app.use((req, res) => {
@@ -66,5 +72,7 @@ app.use((err, req, res, next) => {
 
 // Iniciar o servidor.
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`AIONÔDJUNTA API ativa na porta ${PORT}`);
+  console.log(
+    `AIONÔDJUNTA API ativa na porta ${PORT}`
+  );
 });
